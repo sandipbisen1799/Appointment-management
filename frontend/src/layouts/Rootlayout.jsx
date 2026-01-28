@@ -1,0 +1,66 @@
+import React from 'react'
+import { Outlet } from 'react-router-dom'
+import { useApi } from '../contexts/contextApi'
+import { logoutApi } from '../services/auth.service'
+import { useNavigate } from 'react-router-dom'
+const Rootlayout = () => {
+    const {setuser,setislogin ,islogin} = useApi();
+
+ const navigate = useNavigate();
+    const handleLogout=()=>{
+        localStorage.removeItem("token");
+        try {
+            const response = logoutApi();
+            if(response){
+                setuser({
+                    accoumtType:"",
+                    email:"",
+                    name:"",
+                    id:"",
+                    isblock:false
+
+                });
+                setislogin(false);
+                navigate('/login');
+
+            }
+            
+        } catch (error) {
+            console.log("error in logout",error);
+        }
+        
+    }
+    
+  return (
+    <div className="min-h-screen w-full ">
+      <nav className="bg-white shadow-md">
+        <div className="  px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              <h1 className="text-2xl font-bold text-blue-600">Appointment System</h1>
+            </div>
+            <div className="flex items-center space-x-4">
+              
+           {
+    islogin ? (<>
+    
+      
+              <a href="/signup" className="text-gray-600 hover:text-gray-900">profile</a>
+               <a href="/login" className="text-gray-600 hover:text-gray-900" onClick={handleLogout}>Logout</a>
+              </>):(<>
+              
+                 <a href="/login" className="text-gray-600 hover:text-gray-900">Login</a>
+              <a href="/signup" className="text-gray-600 hover:text-gray-900">signup</a></>)
+           }
+            </div>
+          </div>
+        </div>
+      </nav>
+      <main className="">
+        <Outlet />
+      </main>
+    </div>
+  )
+}
+
+export default Rootlayout

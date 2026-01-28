@@ -21,10 +21,9 @@ const userSchema = new mongoose.Schema(
       enum: ["superadmin","admin"],
       required: true,
     },
-     active:{
-      type:String,
-      enum :["block","unblock"],
-      default : "unblock"
+     isblock:{
+      type:Boolean,
+      default:false
     },
     
       admin: {
