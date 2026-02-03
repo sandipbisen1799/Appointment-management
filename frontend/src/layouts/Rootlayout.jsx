@@ -8,13 +8,14 @@ const Rootlayout = () => {
     const {setUser,setIslogin ,islogin} = useApi();
 
  const navigate = useNavigate();
-    const handleLogout = async () => {
+    const handleLogout = async (e) => {
+      e.preventDefault();
       try {
         const res = await logoutApi();
         if (res) {
           localStorage.removeItem('token');
           localStorage.removeItem('user');
-          
+
           setUser({
             id: '',
             name: '',
