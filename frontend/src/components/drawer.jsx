@@ -122,7 +122,7 @@ export default function PersistentDrawerLeft({
           {islogin ? (
             <>
               <button
-                onClick={() => navigate('/profile')}
+                onClick={() => navigate(`/${title}/profile`)}
                 className="ml-4 text-gray-200 hover:text-white"
               >
                 Profile
