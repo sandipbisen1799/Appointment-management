@@ -12,7 +12,9 @@ const Rootlayout = () => {
       try {
         const res = await logoutApi();
         if (res) {
-          localStorage.clear();
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          
           setUser({
             id: '',
             name: '',
