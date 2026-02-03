@@ -5,7 +5,7 @@ import { logoutApi } from '../services/auth.service'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 const Rootlayout = () => {
-    const {setUser,setIslogin ,islogin} = useApi();
+    const {setUser,setIslogin ,islogin,user} = useApi();
 
  const navigate = useNavigate();
     const handleLogout = async (e) => {
@@ -46,7 +46,7 @@ const Rootlayout = () => {
     islogin ? (<>
     
       
-              <a href="/profile" className="text-gray-600 hover:text-gray-900">profile</a>
+              <a href={`/${user?.accountType}/profile`} className="text-gray-600 hover:text-gray-900">profile</a>
                <a href="/login" className="text-gray-600 hover:text-gray-900" onClick={handleLogout}>Logout</a>
               </>):(<>
               
