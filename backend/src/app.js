@@ -9,7 +9,7 @@ const app = express()
 
 app.use(
   cors({
- origin: "https://appointment-management-pkrw.onrender.com",
+ origin: "appointment-management-one.vercel.app",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
