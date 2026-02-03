@@ -3,33 +3,31 @@ import { Outlet } from 'react-router-dom'
 import { useApi } from '../contexts/contextApi'
 import { logoutApi } from '../services/auth.service'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 const Rootlayout = () => {
-    const {setuser,setislogin ,islogin} = useApi();
+    const {setUser,setIslogin ,islogin} = useApi();
 
  const navigate = useNavigate();
-    const handleLogout=()=>{
-        localStorage.removeItem("token");
-        try {
-            const response = logoutApi();
-            if(response){
-                setuser({
-                    accoumtType:"",
-                    email:"",
-                    name:"",
-                    id:"",
-                    isblock:false
-
-                });
-                setislogin(false);
-                navigate('/login');
-
-            }
-            
-        } catch (error) {
-            console.log("error in logout",error);
+    const handleLogout = async () => {
+      try {
+        const res = await logoutApi();
+        if (res) {
+          localStorage.clear();
+          setUser({
+            id: '',
+            name: '',
+            email: '',
+            accountType: '',
+            isblock: false,
+          });
+          setIslogin(false);
+          toast.success(res.message || 'Logout successful');
+          navigate('/login');
         }
-        
-    }
+      } catch (err) {
+        toast.error(err.response?.data?.message || 'Logout failed');
+      }
+    };
     
   return (
     <div className="min-h-screen w-full ">

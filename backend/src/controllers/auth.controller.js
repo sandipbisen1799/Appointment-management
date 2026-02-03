@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import{ generateToken } from "../utils/jwt.js";
 import bcrypt from "bcrypt";
+import AppointmentForm from "../models/appointementform.model.js";
 
 export const register = async (req,res)=>{
     try {
@@ -12,11 +13,14 @@ export const register = async (req,res)=>{
                 message:"All fields are required"
             })
         }
-        const existinguser = await User.findOne({email});
+        const existinguser = await User.findOne({ $or: [
+    { email: email },
+    { name: name },        
+  ]});
         if(existinguser){
             return res.status(409).json({
                 success:false,
-                message:"user alredy exists"
+                message:"user allready exists"
             })
             
         }
@@ -128,6 +132,28 @@ export const logout =  async(req, res) => {
     message: "logout successfuly",
   });
 };
+export const fetchUser = async (req,res)=>{
+    try {
+        const user = await User.findById(req.user._id).select("-password");
+        if(!user){
+            return res.status(404).json({
+                success:false,
+                message:"user not found"
+            })
+        }
+        return res.status(200).json({
+            success:true,
+            user:user
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success:false,
+            message:"Error in fetching user"
+        })
+    }
+}
 
 export const createAdmin = async (req,res)=>{
     try{
@@ -167,6 +193,49 @@ export const createAdmin = async (req,res)=>{
         })
     }
 }
+export const fetchAdmin = async (req, res) => {
+  try {
+    const admins = await User.aggregate([
+      {
+        $match: { accountType: "admin" }
+      },
+      {
+        $lookup: {
+          from: "appointmentforms", // collection name (IMPORTANT)
+          localField: "_id",
+          foreignField: "admin",
+          as: "appointments"
+        }
+      },
+      {
+        $addFields: {
+          appointmentCount: { $size: "$appointments" }
+        }
+      },
+      {
+        $project: {
+          password: 0,
+          appointments: 0
+        }
+      }
+    ]);
+    const appointments = await AppointmentForm.find();
+
+    return res.status(200).json({
+      success: true,
+      admins,
+      appointments
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Error in fetching admin dashboard data"
+    });
+  }
+};
+
 export const blockAdmin = async (req,res)=>{
     try {
         const { id } = req.params;

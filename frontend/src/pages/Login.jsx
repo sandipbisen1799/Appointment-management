@@ -3,6 +3,7 @@ import { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Api } from '../contexts/contextApi.jsx'
 import { loginApi } from '../services/auth.service'
+import { toast } from 'react-toastify'
 
 const Login = () => {
   const [email, setEmail] = useState('')
@@ -25,6 +26,7 @@ const Login = () => {
         // Store token and user data
         localStorage.setItem('token', response.token)
         localStorage.setItem('user', JSON.stringify(response.user))
+        toast.success(response.message || 'user logged in successfully')
         
         setUser(response.user)
         setIslogin(true)
@@ -39,6 +41,7 @@ const Login = () => {
         }
       }
     } catch (err) {
+      toast.error(err.response?.data?.message || 'somthing went wrong')
       setError(err.response?.data?.message || 'Login failed. Please try again.')
       console.error('Login error:', err)
     } finally {

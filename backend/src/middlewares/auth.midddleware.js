@@ -23,7 +23,9 @@ export const auth = async (req, res, next) => {
     console.log(req.user);
     next();
   } catch (error) {
-    return res.status(500).json(console.error(error), {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
       message: "auth server error",
     });
   }

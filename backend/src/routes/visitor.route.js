@@ -1,5 +1,5 @@
 import express from "express";
-import { getAvailableServices, bookAppointment ,getAvailableSlots } from "../controllers/visitor.controller.js";
+import { getAvailableServices, bookAppointment ,getAvailableSlots  } from "../controllers/visitor.controller.js";
 
 const router = express.Router();
 router.get('/slots/:id',getAvailableSlots)

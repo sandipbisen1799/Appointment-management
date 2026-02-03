@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useApi } from '../contexts/contextApi.jsx'
 import { signupApi } from '../services/auth.service.js';
+import { toast } from 'react-toastify';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -28,10 +29,13 @@ const Signup = () => {
             } else if (response.user.accountType === 'superadmin') {
               navigate('/superadmin');
             }
+            toast.success(response.message || 'signupSuccesfully')
+            
 
          }
     } catch (error) {
         console.error("Signup failed:", error);
+        toast.error(error.response.data.message || 'signup error')
 
     }
    

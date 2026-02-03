@@ -11,7 +11,7 @@ import {
 } from "../services/visitor.service";
 import { toast } from "react-toastify";
 
-const Home = () => {
+const Appointments = () => {
   const { adminName } = useParams();
   console.log("Admin Name from URL:", adminName); // For debugging
 
@@ -222,4 +222,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Appointments;
