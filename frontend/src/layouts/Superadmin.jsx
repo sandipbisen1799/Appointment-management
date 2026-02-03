@@ -4,7 +4,7 @@ import PersistentDrawerLeft from '../components/drawer'
 
 const SuperAdminLayout = () => {
   return (
-    <PersistentDrawerLeft title="SuperAdmin" navUser="superadmin"   data={['profile']}>
+    <PersistentDrawerLeft title="Appointment Management System" navUser="superadmin"   data={['profile']}>
       <div className="p-4">
         <Outlet />
       </div>
