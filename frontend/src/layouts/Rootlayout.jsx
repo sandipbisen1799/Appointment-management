@@ -46,7 +46,7 @@ const Rootlayout = () => {
     islogin ? (<>
     
       
-              <a href="/signup" className="text-gray-600 hover:text-gray-900">profile</a>
+              <a href="/profile" className="text-gray-600 hover:text-gray-900">profile</a>
                <a href="/login" className="text-gray-600 hover:text-gray-900" onClick={handleLogout}>Logout</a>
               </>):(<>
               
