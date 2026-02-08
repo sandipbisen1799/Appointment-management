@@ -51,7 +51,7 @@ export const  getAvailableServices = async (req, res) => {
 };
 export const bookAppointment = async (req, res) => {
     try {
-        const { date, serviceId, slotId, } = req.body;
+        const { date, serviceId, slotId,email } = req.body;
         const { id } = req.params;
         const admin = await User.findOne({name: id});
         if(!admin){
@@ -74,7 +74,7 @@ export const bookAppointment = async (req, res) => {
         const appointment = await Appointment.create({
             date,
             service: serviceId,
-
+           email,
             slot: slotId,
             admin: admin._id,
             

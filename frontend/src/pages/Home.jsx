@@ -23,6 +23,7 @@ const Home = () => {
   const [formData, setFormData] = useState({
     date: today,
     serviceId: "",
+    email:''
   });
 
   /* ---------------- FETCH SLOTS & SERVICES ---------------- */
@@ -59,6 +60,7 @@ const Home = () => {
         date: formData.date,
         serviceId: formData.serviceId,
         slotId: selectedSlotId,
+        email:formData.email
       };
       console.log(adminName);
       const response = await submitFormAPI(payload, adminName);
@@ -203,6 +205,16 @@ const Home = () => {
               {services.length === 0 && (
                 <p className="text-sm text-gray-500">No services available</p>
               )}
+            </label>
+            <label htmlFor="email" className="flex flex-col gap-1">
+              <h1>email</h1>
+
+              <input type="email" onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    email: e.target.value,
+                  }))
+                } name="email" id="" value={formData.email} className="border px-4 py-2 rounded-md"/>
             </label>
             {/* Submit */}
             <button

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { approveAppointmentsApi, getAllAppointmentsApi, rejectAppointmentsApi } from "../services/admin.service";
 import { toast } from "react-toastify";
+import sendAppointmentEmail from "../utils/sendAppointment";
 
 function AdminAppointment() {
   const [appointments, setAppointments] = useState([]);
@@ -23,6 +24,7 @@ function AdminAppointment() {
       
 
       if (res) {
+        sendAppointmentEmail(appointment,"Approved")
         fetchAppointments(); // Refresh the list of appointments
         toast.success(res.message || "Appointment approved successfully");
       } else {
@@ -40,6 +42,7 @@ function AdminAppointment() {
       
 
       if (res) {
+        sendAppointmentEmail(appointment,"Rejected")
         fetchAppointments(); // Refresh the list of appointments
         toast.success(res.message || "Appointment rejected successfully");
       } else {
