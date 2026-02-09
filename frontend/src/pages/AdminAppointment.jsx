@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { approveAppointmentsApi, getAllAppointmentsApi, rejectAppointmentsApi } from "../services/admin.service";
 import { toast } from "react-toastify";
-import sendAppointmentEmail from "../utils/sendAppointment";
 
 function AdminAppointment() {
   const [appointments, setAppointments] = useState([]);
@@ -24,7 +23,7 @@ function AdminAppointment() {
       
 
       if (res) {
-        sendAppointmentEmail(appointment,"Approved")
+        
         fetchAppointments(); // Refresh the list of appointments
         toast.success(res.message || "Appointment approved successfully");
       } else {
@@ -42,7 +41,6 @@ function AdminAppointment() {
       
 
       if (res) {
-        sendAppointmentEmail(appointment,"Rejected")
         fetchAppointments(); // Refresh the list of appointments
         toast.success(res.message || "Appointment rejected successfully");
       } else {
@@ -110,7 +108,7 @@ function AdminAppointment() {
                 <button className="px-4 py-1 rounded-2xl text-green-500 bg-green-300 hover:bg-green-400" onClick={ handleApprove(appointment)}> Approve now</button>
                 <button className="px-4 py-1 rounded-2xl text-red-500 bg-red-300 hover:bg-red-400 ml-2" onClick={handleReject(appointment)}> Reject now</button>
                 </>):(<>
-                 <button className="px-4 py-1 rounded-2xl bg-green-300 text-white hover:bg-green-400"> Approved</button>
+                 <button className={`${appointment.status == 'Approved' ?'bg-green-300 hover:bg-green-400':'bg-red-300 hover:bg-red-400'} px-4 py-1 rounded-2xl bg-green-300 text-white`}> {appointment.status}</button>
                 </>)
               }
 

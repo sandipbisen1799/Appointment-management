@@ -1,6 +1,8 @@
 import AppointmentForm from "../models/appointementform.model.js";
 import Service from "../models/service.model.js";
 import Slot from "../models/slot.model.js";
+import { sendEmail } from "../utils/Mailsender.js";
+
 export const createService = async (req,res)=>{
     try {
         const {serviceName, description}= req.body;
@@ -367,7 +369,11 @@ export const approveAppointment = async (req, res) => {
             appointmentId,
             { status: "Approved" }, 
             { new: true }
-        );
+        )  .populate("service", "serviceName ")
+      .populate("slot", "time  date")
+      .populate("admin", " email")
+      .sort({ createdAt: -1 });
+        
         if (!appointment) {
 
             return res.status(404).json({
@@ -375,6 +381,18 @@ export const approveAppointment = async (req, res) => {
                 message: "Appointment not found"
             });
         }
+        console.log(appointment);
+        const result = await sendEmail({
+  
+  serviceName : appointment.service.serviceName,
+    adminEmail : appointment.admin.email ,
+      slotDay : appointment.slot.date,
+      slotTime : appointment.slot.time,
+      appointmentEmail : appointment.email ,
+      status: appointment.status
+  // or user.name
+  
+});
         return res.status(200).json({
             success: true,
             message: "Appointment approved successfully",
@@ -396,7 +414,10 @@ export const rejectAppointment = async (req, res) => {
             appointmentId,
             { status: "Rejected" }, 
             { new: true }
-        );
+        ) .populate("service", "serviceName ")
+      .populate("slot", "time  date")
+      .populate("admin", " email")
+      .sort({ createdAt: -1 });
         if (!appointment) {
 
             return res.status(404).json({
@@ -404,6 +425,17 @@ export const rejectAppointment = async (req, res) => {
                 message: "Appointment not found"
             });
         }
+              const result = await sendEmail({
+  
+  serviceName : appointment.service.serviceName,
+    adminEmail : appointment.admin.email ,
+      slotDay : appointment.slot.date,
+      slotTime : appointment.slot.time,
+      appointmentEmail : appointment.email ,
+      status: appointment.status
+  // or user.name
+  
+});
         return res.status(200).json({
             success: true,
             message: "Appointment rejected successfully",

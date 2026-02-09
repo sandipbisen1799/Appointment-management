@@ -127,18 +127,27 @@ export const login = async (req,res)=>{
     }
 }
 export const logout =  async(req, res) => {
-     res.clearCookie("token", {
-    httpOnly: true,
-    sameSite: "lax",
-  });
-  res.status(200).json({
-    success: true,
-    message: "logout successfuly",
-  });
+ try {
+        res.clearCookie("token", {
+              sameSite:'none'  ,
+               httpOnly: true,
+               secure: true,
+     });
+     return  res.status(200).json({
+       success: true,
+       message: "logout successfuly",
+     });
+ } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+        success:false,
+        message:"loguout error"
+    })
+ }
 };
 export const fetchUser = async (req,res)=>{
     try {
-        const user = await User.findById(req.user._id).select("-password");
+        const user = req.user ;
         if(!user){
             return res.status(404).json({
                 success:false,

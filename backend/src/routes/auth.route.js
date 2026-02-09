@@ -9,6 +9,7 @@ router.post('/register', register );
 router.post('/login', login );
 router.post('/logout', logout );
 router.get('/me',auth, fetchUser );
+
 router.post('/create' ,auth, authorize("superadmin"), createAdmin);
 router.get('/admin',auth, authorize("superadmin"), fetchAdmin );
 router.put('/block/:id' ,auth, authorize("superadmin"),blockAdmin );

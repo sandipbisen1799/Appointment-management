@@ -14,6 +14,7 @@ import AdminMember from "../pages/AdminMember";
 import AddSlot from "../pages/AddSlot";
 import Appointments from "../pages/Appointments.jsx";
 import AdminAppointment from "../pages/AdminAppointment.jsx";
+import Service from "../pages/service.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -59,8 +60,9 @@ export const router = createBrowserRouter([
                 children: [
                   { index: true, element: <AdminMember /> },
                   { path: "profile", element: <Profile /> },
-                  { path: "addslot", element: <AddSlot /> },
-                  { path: "appointments", element: <AdminAppointment /> },
+                  { path: "Slot", element: <AddSlot /> },
+                  { path: "Appointment", element: <AdminAppointment /> },
+                  {path:'Service', element: <Service/> }
                 ],
               },
             ],

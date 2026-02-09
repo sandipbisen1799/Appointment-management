@@ -5,6 +5,7 @@ const env = {
     CORS_ORIGIN : process.env.CORS_ORIGIN,
     PORT : process.env.PORT,
     JWT_SECRET : process.env.JWT_SECRET,
+    BREVO_API_KEY:process.env.BREVO_API_KEY
   
 }
 
