@@ -1,8 +1,10 @@
 import jwt from "jsonwebtoken";
 import env from "../config/env.js";
 export const auth = async (req, res, next) => {
+  console.log(req.cookies.token)
   let token;
   try {
+
     if (req.cookies?.token) {
       token = req.cookies.token;
     } else if (

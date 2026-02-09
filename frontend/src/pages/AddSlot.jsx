@@ -123,6 +123,7 @@ function AddSlot() {
 
   const handleUpdateSlot = async (slot) => {
     try {
+      
       const edits = editingSlots[slot._id] || {
         startTime: slot.startTime,
         endTime: slot.endTime,
@@ -130,6 +131,12 @@ function AddSlot() {
       if (!edits.startTime || !edits.endTime) {
         toast.error("Start and end time are required");
         return;
+      }
+      
+      
+      if(edits.endTime == slot.endTime &&  edits.startTime == slot.startTime ){
+      
+        return toast.error('values are unchanged')
       }
       const res = await updateSlotApi(slot._id, edits);
       if (res) {
@@ -146,7 +153,7 @@ function AddSlot() {
     fetchslot();
   }, []);
   return (
-    <div className="flex flex-col bg-gray-50 items-center p-4 gap-3">
+    <div className="flex flex-col bg-gray-50 items-center p-4 gap-3" >
       <h1 className=" text-2xl  font-semibold">Add Slot </h1>
       {days.map((day, index) => (
         <div key={index} className="w-full flex flex-col   px-4  bg-white">
@@ -179,7 +186,7 @@ function AddSlot() {
                 .map((slot, index) => (
                   <div
                     key={slot._id || index}
-                    className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg relative"
+                    className="flex items-center gap-2 p-3 z-99 bg-blue-50 rounded-lg relative"
                     onClick={() => setEditingSlotId(slot._id)}
                   >
                     {editingSlotId === slot._id ? (

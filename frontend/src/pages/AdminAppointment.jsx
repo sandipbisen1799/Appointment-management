@@ -108,7 +108,7 @@ function AdminAppointment() {
               {
                 appointment.status == 'Pending' ? (<>
                 <button className="px-4 py-1 rounded-2xl text-green-500 bg-green-300 hover:bg-green-400" onClick={ handleApprove(appointment)}> Approve now</button>
-                <button className="px-4 py-1 rounded-2xl text-red-500 bg-red-300 hover:bg-red-400 ml-2" onClick={() => handleReject(appointment)}> Reject now</button>
+                <button className="px-4 py-1 rounded-2xl text-red-500 bg-red-300 hover:bg-red-400 ml-2" onClick={handleReject(appointment)}> Reject now</button>
                 </>):(<>
                  <button className="px-4 py-1 rounded-2xl bg-green-300 text-white hover:bg-green-400"> Approved</button>
                 </>)

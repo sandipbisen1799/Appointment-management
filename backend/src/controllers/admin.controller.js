@@ -178,7 +178,7 @@ export const addSlot = async (req, res) => {
 export const getAllSlots = async (req,res)=>{
       try {
     
-     
+       console.log('fff',req.cookie);
         const slots = await Slot.find({ admin: req.user._id }).sort({ startTime: 1 });
         if (!slots || slots.length === 0) {
             return res.status(404).json({
@@ -204,6 +204,7 @@ export const getAllSlots = async (req,res)=>{
 export const getDaySlot = async (req,res)=>{
       try {
         const {day} = req.body;
+        console.log('fff',req.cookie.token);
         if(!day){
             return res.status(400).json({
          success : false ,
