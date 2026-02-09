@@ -39,8 +39,10 @@ export const register = async (req,res)=>{
 
         await user.save();
         return res.cookie("token", token, {
-            httpOnly: true,
-            secure: true,
+    
+             httpOnly: true,
+  secure: true,        // ⭐ REQUIRED on HTTPS (Vercel)
+  sameSite: "none", 
             maxAge: 24 * 60 * 60 * 1000,
         }).status(201).json({
             success:true,
@@ -104,6 +106,7 @@ export const login = async (req,res)=>{
         })}
         else if(user.accountType == 'superadmin'){
                return res.cookie("token", token, {
+              sameSite:'none'  ,
             httpOnly: true,
             secure: true,
             maxAge: 24 * 60 * 60 * 1000,
