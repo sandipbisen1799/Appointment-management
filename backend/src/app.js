@@ -4,6 +4,7 @@ import cookieparser from 'cookie-parser'
 import authRouter from './routes/auth.route.js'
 import adminRouter from './routes/admin.route.js'
 import visitorRouter from './routes/visitor.route.js'
+import paymentRoutes from './routes/payment.route.js'
 const app = express()
 
 
@@ -32,6 +33,7 @@ app.use(cookieparser());
 app.use('/api/v1/auth',authRouter); 
 app.use('/api/v1/admin',adminRouter); 
 app.use('/api/v1/visitor',visitorRouter);
+app.use("/api/v1/payment", paymentRoutes);
 
 
 app.use((req, res) => {

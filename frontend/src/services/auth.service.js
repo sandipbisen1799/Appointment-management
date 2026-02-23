@@ -19,6 +19,19 @@ export const fetchMeApi = async () => {
   const response = await api.get('/auth/me');
   return response.data;
 }
+export const profileApi = async () => {
+  const response = await api.get('/auth/profile');
+  return response.data;
+}
+export const settingAPI = async (formData) => {
+  const response = await api.post('/auth/setting', formData);
+  return response.data;
+}
+export const getsettingAPI = async () => {
+  const response = await api.get('/auth/getSetting');
+  return response.data;
+}
+
 export const addAdminAPI = async (formData) => {
   const response = await api.post('/auth/create',formData);
   return response.data;

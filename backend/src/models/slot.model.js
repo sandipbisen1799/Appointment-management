@@ -5,11 +5,19 @@ const slotSchema = new mongoose.Schema({
   startTime: { type: String },
   endTime: { type: String },
   time: { type: String }, // human readable label e.g. "9 AM - 10 AM"
-  isBooked: { type: Boolean, default: false },
+ 
   admin : {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   },
+  date1:{
+    type:String
+  }
+
+
+},
+{
+  timestamps:true
 });
 const Slot = mongoose.model('Slot', slotSchema);
 export default Slot;

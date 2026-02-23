@@ -10,7 +10,7 @@ export const sendEmail = async ({
   status,
 }) => {
   const client = SibApiV3Sdk.ApiClient.instance;
-
+  console.log(env.BREVO_API_KEY);
   // API key
   client.authentications["api-key"].apiKey = env.BREVO_API_KEY;
 
@@ -30,4 +30,39 @@ export const sendEmail = async ({
   };
 
   await tranEmailApi.sendTransacEmail(emailData);
+};
+
+
+
+export const sendBulkEmail = async ({ admin,emails, subject, message }) => {
+  const client = SibApiV3Sdk.ApiClient.instance;
+  console.log(env.BREVO_API_KEY);
+  // API key
+  client.authentications["api-key"].apiKey = env.BREVO_API_KEY;
+
+  const tranEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
+
+  // Get HTML template
+
+
+  // Send email to each recipient
+  const emailPromises = emails.map(async (email) => {
+    const emailData = {
+      to: [{ email: email }],
+      subject: subject,
+
+       templateId: 2,
+ 
+      sender: {
+        name: "Appointment System",
+        email: admin.email || "noreply@example.com"
+      },
+       params: {
+      message
+    },
+    };
+    await tranEmailApi.sendTransacEmail(emailData);
+  });
+
+  await Promise.all(emailPromises);
 };

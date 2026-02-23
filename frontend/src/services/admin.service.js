@@ -10,6 +10,17 @@ export const getServiceApi = async ()=>{
     return response.data;
     
 }
+export const deleteServiceAPI = async (id)=>{
+    const response = await api.delete(`/admin/service/${id}`)
+    return response.data;
+    
+}
+export const updateServiceAPI = async (id ,formData)=>{
+    const response = await api.put(`/admin/service/${id}`, formData) ;
+
+    return response.data;
+    
+}
 export const deleteSlotApi = async (id)=>{
     const response = await api.delete(`/admin/deleteslot/${id}`)
     return response.data;
@@ -36,8 +47,18 @@ export const updateSlotApi = async (id, formdata)=>{
     return response.data;
     
 }
-export const getAllAppointmentsApi = async ()=>{
-    const response = await api.get('/admin/appointments')
+export const getAllAppointmentsApi = async (email = null)=>{
+    const params = email ? { email } : {};
+    const response = await api.get('/admin/appointments', { params })
+    return response.data;   
+}
+export const getApproveAppointmentsApi = async (email = null)=>{
+    const params = email ? { email } : {};
+    const response = await api.get('/admin/approveappointments', { params })
+    return response.data;   
+}
+export const getnewlyAppointmentsApi = async ()=>{
+    const response = await api.get('/admin/appointment')
     return response.data;   
 }
 export const approveAppointmentsApi = async (appointmentId)=>{
@@ -47,4 +68,12 @@ export const approveAppointmentsApi = async (appointmentId)=>{
 export const rejectAppointmentsApi = async (appointmentId)=>{
     const response = await api.put(`/admin/reject-appointment/${appointmentId}`)
     return response.data;   
+}
+export const getOrderAPI = async ()=>{
+    const response = await api.get(`/admin/getorder`)
+    return response.data;   
+}
+export const sendAllEmailApi = async ({ emails, message, subject })=>{
+    const response = await api.post('/admin/send-all-email', { emails, message, subject })
+    return response.data;
 }

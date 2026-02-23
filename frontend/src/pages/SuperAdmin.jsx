@@ -78,7 +78,7 @@ try {
 }
   }
 useEffect(()=>{
-      fetchUsers();
+ fetchUsers();
     },[])
 
   return (

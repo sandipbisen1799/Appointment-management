@@ -11,20 +11,31 @@ import SuperAdminLayout from "../layouts/Superadmin";
 import AdminLayout from "../layouts/admin";
 import TeamMember from "../pages/SuperAdmin";
 import AdminMember from "../pages/AdminMember";
-import AddSlot from "../pages/AddSlot";
-import Appointments from "../pages/Appointments.jsx";
+import AddSlot from "../pages/Slot.jsx";
+
 import AdminAppointment from "../pages/AdminAppointment.jsx";
 import Service from "../pages/service.jsx";
-
+import Appointment from "../pages/Appointment.jsx";
+import Setting from "../pages/Setting.jsx";
+import Order from "../pages/Order.jsx";
+import Communication from "../pages/Communication.jsx";
 export const router = createBrowserRouter([
+ 
+     {
+    path:':adminName?',
+    element:<Appointment/>
+  },
   {
-    path: ":adminName?",
+    path: "/",
     element: <Rootlayout />,
     children: [
       { index: true, element: <Home /> },
       { path: "login", element: <Login /> },
       { path: "signup", element: <Signup /> },
       { path: "contact-us", element: <Contactus /> },
+         
+    
+    
 
       // ✅ pathless protected wrapper
       {
@@ -62,7 +73,10 @@ export const router = createBrowserRouter([
                   { path: "profile", element: <Profile /> },
                   { path: "Slot", element: <AddSlot /> },
                   { path: "Appointment", element: <AdminAppointment /> },
-                  {path:'Service', element: <Service/> }
+                  {path:'Service', element: <Service/> },
+                    {path:'Order', element: <Order/> },
+                            {path:'Communication', element: <Communication/> },
+                   {path:'Setting', element: <Setting/> }
                 ],
               },
             ],

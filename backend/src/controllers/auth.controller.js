@@ -3,6 +3,7 @@ import User from "../models/user.model.js";
 import{ generateToken } from "../utils/jwt.js";
 import bcrypt from "bcrypt";
 import AppointmentForm from "../models/appointementform.model.js";
+import Profile from "../models/profile.model.js";
 
 export const register = async (req,res)=>{
     try {
@@ -13,6 +14,7 @@ export const register = async (req,res)=>{
                 message:"All fields are required"
             })
         }
+
         const existinguser = await User.findOne({ $or: [
     { email: email },
     { name: name },        
@@ -36,6 +38,9 @@ export const register = async (req,res)=>{
       _id: user._id,
       accountType: user.accountType,
     });
+    const profile = await Profile.create({
+  user: user._id
+});
 
         await user.save();
         return res.cookie("token", token, {
@@ -93,6 +98,7 @@ export const login = async (req,res)=>{
         _id: user._id,
         accountType: user.accountType,
     });
+    
     if(user.accountType == 'admin'){
         return res.cookie("token", token, {
             httpOnly: true,
@@ -167,7 +173,77 @@ export const fetchUser = async (req,res)=>{
         })
     }
 }
+export const fetchProfile = async (req,res)=>{
+    try {
+        const user = await User.findById(req.user._id);
+        if(!user){
+            return res.status(404).json({
+                success:false,
+                message:"user not found"
+            })
+        }
+    
+        return res.status(200).json({
+            success:true,
+            user:user
+        });
 
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success:false,
+            message:"Error in fetching user"
+        })
+    }
+}
+
+export const setting = async (req, res)=>{
+    try {
+        const {dayNumber} = req.body ;
+       const profile = await Profile.findOne({ user: req.user._id});
+       profile.dayNumber = dayNumber ;
+       await profile.save();
+       return res.status(200).json({
+        success:true ,
+        message:'setting  update successfully ',
+        profile
+       })
+        
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            success:false,
+            message:'settings is not updated ',
+            
+
+        })
+    }
+} 
+export const getSetting =  async (req,res)=>{
+    try {
+        const setting = await Profile.findOne({
+            user:req.user._id
+        })
+        if(!setting){
+            return res.status(400).json({
+                success:false,
+                message: 'setting  profile is missing '
+
+            })
+        }
+        return res.status(200).json({
+            success:true,
+            message:'getting setting is successfully  ',
+            setting
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success:false,
+            message:'error while getting the setting profile'
+        })
+    }
+}
 export const createAdmin = async (req,res)=>{
     try{
         const {name,email,password}= req.body;

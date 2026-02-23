@@ -25,18 +25,25 @@ import { logoutApi } from '../services/auth.service';
 
 const drawerWidth = 240;
 
-/* ✅ FIXED Main component */
+/* ✅ FIXED Main (Scrollable area) */
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     flexGrow: 1,
-    padding: theme.spacing(3),
     width: '100%',
+    height: '100vh',              // 🔥 fixed height
+    overflowY: 'auto',            // 🔥 scrolling here
     overflowX: 'hidden',
+    display:'flex',
+    flexDirection:'column',
+    justifyContent:'between',
+    position:'relative',
+    alignItems:'center',
+    marginLeft: open ? `${drawerWidth}px` : 0,
     transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
     }),
-    marginLeft: open ? 0 : `-${drawerWidth}px`,
+    backgroundColor: '#f9fafb',
   }),
 );
 
@@ -44,17 +51,10 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
-  transition: theme.transitions.create(['margin', 'width'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
+  transition: theme.transitions.create(['margin', 'width']),
   ...(open && {
     width: `calc(100% - ${drawerWidth}px)`,
     marginLeft: `${drawerWidth}px`,
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
   }),
 }));
 
@@ -74,6 +74,7 @@ export default function PersistentDrawerLeft({
 }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [sideBar ,setSideBar] = React.useState(true);
   const navigate = useNavigate();
   const { setUser, setIslogin, islogin } = useApi();
 
@@ -99,7 +100,7 @@ export default function PersistentDrawerLeft({
   };
 
   return (
-    <Box sx={{ display: 'flex', width: '100vw', overflowX: 'hidden' }}>
+    <Box sx={{ display: 'flex', width: '100vw', height: '100vh', overflow: 'hidden' }}>
       <CssBaseline />
 
       <AppBar position="fixed" open={open}>
@@ -119,7 +120,7 @@ export default function PersistentDrawerLeft({
 
           <Box sx={{ flexGrow: 1 }} />
 
-          {islogin ? (
+          {islogin && (
             <>
               <button
                 onClick={() => navigate(`/${navUser}/profile`)}
@@ -134,32 +135,25 @@ export default function PersistentDrawerLeft({
                 Logout
               </button>
             </>
-          ) : null}
+          )}
         </Toolbar>
       </AppBar>
 
       <Drawer
         variant="persistent"
-        anchor="left"
         open={open}
+        
         sx={{
-          width: drawerWidth,
-          flexShrink: 0,
           '& .MuiDrawer-paper': {
             width: drawerWidth,
-            minWidth: drawerWidth,
             boxSizing: 'border-box',
-            overflowX: 'hidden',
+            overflow: 'hidden', // 🔥 drawer doesn’t scroll page
           },
         }}
       >
         <DrawerHeader>
           <IconButton onClick={() => setOpen(false)}>
-            {theme.direction === 'ltr' ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
+            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </DrawerHeader>
 
@@ -168,9 +162,7 @@ export default function PersistentDrawerLeft({
         <List>
           <ListItem disablePadding>
             <ListItemButton onClick={() => navigate(`/${navUser}`)}>
-              <ListItemIcon>
-                <InboxIcon />
-              </ListItemIcon>
+              <ListItemIcon><InboxIcon /></ListItemIcon>
               <ListItemText primary="Dashboard" />
             </ListItemButton>
           </ListItem>
@@ -188,11 +180,9 @@ export default function PersistentDrawerLeft({
         </List>
       </Drawer>
 
-      <Main className="w-full max-w-full bg-gray-50 overflow-x-hidden" open={open}>
-    
-    
-          {children || <Outlet />}
-  
+      <Main open={open}>
+        
+        {children || <Outlet />}
       </Main>
     </Box>
   );

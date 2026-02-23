@@ -7,7 +7,7 @@ const AdminLayout = () => {
     <PersistentDrawerLeft
       navUser="admin"
       title="Appointment System"
-      data={['Slot', 'Appointment','Service']}
+      data={['Slot', 'Appointment','Service','Order','Communication','Setting']}
     >
       <div className="w-full max-w-full overflow-x-hidden">
         <Outlet />

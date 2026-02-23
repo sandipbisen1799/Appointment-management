@@ -31,6 +31,14 @@ const userSchema = new mongoose.Schema(
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   },
+  appointment:{
+      type: mongoose.Schema.Types.ObjectId,
+        ref: 'AppointmentForm'
+  },
+   profile: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Profile"
+}
 
 }
 

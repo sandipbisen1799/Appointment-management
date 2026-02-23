@@ -15,7 +15,6 @@ function AddSlot() {
   const [slots, setslots] = useState([]);
 
   // For manual create form per day
-  
 
   // For per-slot editing state
   const [editingSlots, setEditingSlots] = useState({
@@ -57,7 +56,8 @@ function AddSlot() {
     try {
       const res = await getSlotApi();
       console.log(res);
-      setslots(res.slots);
+      setslots(res?.slots);
+      const fetchedSlots = res.slots || [];
 
       // initialize editingSlots for controls (normalized to HH:MM)
       const init = {};
@@ -67,6 +67,9 @@ function AddSlot() {
           endTime: normalizeTime(s.endTime),
         };
       });
+      const daysWithSlots = [...new Set(fetchedSlots.map((slot) => slot.date))];
+      console.log(daysWithSlots);
+      setSelectedDays(daysWithSlots);
       setEditingSlots(init);
     } catch (error) {
       console.log(error);
@@ -90,19 +93,18 @@ function AddSlot() {
     "sunday",
   ];
   const handleSlot = async (day) => {
-   try {
-     const formdata = { day };
- 
-     const res = await createSlotApi(formdata);
-     console.log(res);
-     if (res) {
-       fetchslot();
-       toast.success(res.message || "slot created");
-   } }
-   catch (error) {
-     toast.error(error?.response?.data?.message || "Error creating slot");
-   }
-    
+    try {
+      const formdata = { day };
+
+      const res = await createSlotApi(formdata);
+      console.log(res);
+      if (res) {
+        fetchslot();
+        toast.success(res.message || "slot created");
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Error creating slot");
+    }
   };
   const handleDeleteSlot = async (slot) => {
     try {
@@ -123,7 +125,6 @@ function AddSlot() {
 
   const handleUpdateSlot = async (slot) => {
     try {
-      
       const edits = editingSlots[slot._id] || {
         startTime: slot.startTime,
         endTime: slot.endTime,
@@ -132,12 +133,7 @@ function AddSlot() {
         toast.error("Start and end time are required");
         return;
       }
-      
-      
-      if(edits.endTime == slot.endTime &&  edits.startTime == slot.startTime ){
-      
-        return toast.error('values are unchanged')
-      }
+
       const res = await updateSlotApi(slot._id, edits);
       if (res) {
         fetchslot();
@@ -152,9 +148,17 @@ function AddSlot() {
   useEffect(() => {
     fetchslot();
   }, []);
+
   return (
-    <div className="flex flex-col bg-gray-50 items-center p-4 gap-3" >
-      <h1 className=" text-2xl  font-semibold">Add Slot </h1>
+    <div className="flex flex-col bg-gray-50 items-center p-4 gap-3">
+      <div className="w-full  bg-white py-3 flex-col  md:flex-row flex justify-between items-center gap-5 px-12 rounded-2xl">
+        <div className="flex   flex-col border  py-3.5 px-7 border-dashed rounded-xl border-gray-300  items-left justify-center">
+          <h1 className="text-gray-500 font-semibold  text-sm">Total slot</h1>
+          <p className="text-2xl font-semibold text-gray-700">
+            {slots?.length}
+          </p>
+        </div>
+      </div>
       {days.map((day, index) => (
         <div key={index} className="w-full flex flex-col   px-4  bg-white">
           <div className="w-full flex p-2 justify-between px-2">
@@ -222,11 +226,22 @@ function AddSlot() {
                         />
 
                         <button
-                          className="px-3 py-1 bg-indigo-600 text-white rounded"
+                          className={`px-3 py-1 bg-indigo-600 text-white rounded ${
+                            editingSlots[slot._id]?.startTime ===
+                              slot.startTime &&
+                            editingSlots[slot._id]?.endTime === slot.endTime
+                              ? "opacity-50 cursor-not-allowed"
+                              : "hover:bg-indigo-700"
+                          }`}
                           onClick={(e) => {
                             e.stopPropagation();
                             handleUpdateSlot(slot);
                           }}
+                          disabled={
+                            editingSlots[slot._id]?.startTime ===
+                              slot.startTime &&
+                            editingSlots[slot._id]?.endTime === slot.endTime
+                          }
                         >
                           Save
                         </button>
