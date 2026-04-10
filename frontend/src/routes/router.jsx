@@ -14,7 +14,7 @@ import AdminMember from "../pages/AdminMember";
 import AddSlot from "../pages/Slot.jsx";
 
 import AdminAppointment from "../pages/AdminAppointment.jsx";
-import Service from "../pages/service.jsx";
+import Service from "../pages/Service.jsx";
 import Appointment from "../pages/Appointment.jsx";
 import Setting from "../pages/Setting.jsx";
 import Order from "../pages/Order.jsx";
