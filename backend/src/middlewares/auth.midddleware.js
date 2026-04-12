@@ -15,7 +15,7 @@ export const auth = async (req, res, next) => {
     }
     console.log(token);
     if (!token) {
-      return res.status(400).json({
+      return res.status(401).json({
         success: false,
         message: "token is missing while accessing  the token from the cookie",
       });

@@ -151,7 +151,7 @@ console.log(data)
         },
         // Handle payment cancellation (user closes modal)
         modal: {
-          oncancel: async function () {
+          onCancel: async function () {
             try {
               await handlePaymentFailureAPI({
                 razorpay_order_id: data.order.id,

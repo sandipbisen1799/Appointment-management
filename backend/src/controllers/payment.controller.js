@@ -70,20 +70,10 @@ export const verifyPayment = async (req, res) => {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
       req.body;
 
-    const body = razorpay_order_id + "|" + razorpay_payment_id;
-
-    const expectedSignature = crypto
-      .createHmac("sha256", env.RAZORPAY_SECRET)
-      .update(body.toString())
-      .digest("hex");
-    console.log("ra", razorpay_signature);
-    console.log("ex", expectedSignature);
+    // First, find the payment record
     const payment = await Payment.findOne({
       razorpay_order_id,
     });
-  
-    payment.razorpay_payment_id = razorpay_payment_id;
-    payment.razorpay_signature = razorpay_signature;
 
     if (!payment) {
       return res.status(404).json({
@@ -92,40 +82,55 @@ export const verifyPayment = async (req, res) => {
       });
     }
 
+    // Check if already paid
     if (payment.status === "paid") {
-        const appointment = await AppointmentForm.findById(payment.appointment)
-        appointment.isBooked = true ;
-        appointment.save();
+      const appointment = await AppointmentForm.findById(payment.appointment)
+      if (appointment) {
+        appointment.isBooked = true;
+        await appointment.save();
+      }
       return res.status(200).json({
         success: true,
-        message: "Payment already verified and appointment booked sucessfully",
+        message: "Payment already verified and appointment booked successfully",
         payment,
       });
     }
-    await payment.save();
+
+    // Verify signature first before saving
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+    const expectedSignature = crypto
+      .createHmac("sha256", env.RAZORPAY_SECRET)
+      .update(body.toString())
+      .digest("hex");
+    console.log("ra", razorpay_signature);
+    console.log("ex", expectedSignature);
+
     if (expectedSignature === razorpay_signature) {
-      const razorpayPayment =
-        await razorpay.payments.fetch(razorpay_payment_id);
+      const razorpayPayment = await razorpay.payments.fetch(razorpay_payment_id);
       console.log(razorpayPayment);
+      
+      // Update payment only after verification
       payment.razorpay_payment_id = razorpay_payment_id;
       payment.razorpay_signature = razorpay_signature;
       payment.status = "paid";
       payment.paid = razorpayPayment.amount / 100;
       payment.amount_due = 0;
-       const appointment = await AppointmentForm.findById(payment.appointment)
-        appointment.isBooked = true ;
-        appointment.save();
-
       await payment.save();
+
+      // Update appointment booking status
+      const appointment = await AppointmentForm.findById(payment.appointment)
+      if (appointment) {
+        appointment.isBooked = true;
+        await appointment.save();
+      }
+
       return res.status(200).json({
         success: true,
-        appointment,
-
         message: "Payment Verified and appointment booked successfully",
         payment,
       });
     } else {
-      // Payment failed - update status to failed and save
+      // Payment failed - update status to failed
       payment.status = "failed";
       payment.razorpay_payment_id = razorpay_payment_id;
       payment.razorpay_signature = razorpay_signature;

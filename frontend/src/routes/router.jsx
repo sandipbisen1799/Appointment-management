@@ -20,11 +20,6 @@ import Setting from "../pages/Setting.jsx";
 import Order from "../pages/Order.jsx";
 import Communication from "../pages/Communication.jsx";
 export const router = createBrowserRouter([
- 
-     {
-    path:':adminName?',
-    element:<Appointment/>
-  },
   {
     path: "/",
     element: <Rootlayout />,
@@ -33,6 +28,7 @@ export const router = createBrowserRouter([
       { path: "login", element: <Login /> },
       { path: "signup", element: <Signup /> },
       { path: "contact-us", element: <Contactus /> },
+      { path: ":adminName", element: <Appointment /> },
          
     
     

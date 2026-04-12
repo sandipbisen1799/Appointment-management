@@ -45,25 +45,29 @@ export const bookAppointment = async (req, res) => {
       pincode,
     } = req.body;
 
-    console.log(date);
     const { id } = req.params;
-    const user = await User.findOne({ name: id });
-    console.log(user);
-    console.log(date);
+    const admin = await User.findOne({ name: id });
+    
+    if (!admin) {
+      return res.status(400).json({
+        success: false,
+        message: "admin not found",
+      });
+    }
 
-    const service = await Service.findById(serviceId).select(" price");
+    const service = await Service.findById(serviceId).select("price serviceName");
     if (!service) {
       return res.status(400).json({
         success: false,
         message: "service not found",
       });
     }
-    console.log(user);
-    const admin = await User.findOne({ name: id });
-    if (!admin) {
+
+    const slot = await Slot.findById(slotId);
+    if (!slot) {
       return res.status(400).json({
         success: false,
-        message: "admin not found",
+        message: "slot not found",
       });
     }
 
@@ -87,11 +91,13 @@ export const bookAppointment = async (req, res) => {
       pincode,
     });
     await appointment.save();
+    
     return res.status(201).json({
       success: true,
       message: "Appointment is added  successfully",
       appointment: appointment,
       service,
+      slot,
     });
   } catch (error) {
     console.log(error);
